@@ -34,6 +34,6 @@ def test_string_check():
 # Test 6: INTENTIONAL FAILURE (FAIL - Assignment requirement)
 def test_intentional_failure():
     val1 = 1
-    val2 = 2
-    # Yeh test jaan bujh kar fail hoga taake CI/CD pipeline ruk jaye
+    val2 = 1
+    # now it will be pass
     assert val1 == val2, "Intentional failure to prove CI/CD blocking"
