@@ -1,4 +1,5 @@
 from fastapi.testclient import TestClient
+
 from main import app
 
 client = TestClient(app)
@@ -21,9 +22,9 @@ def test_ready_endpoint():
 
 # Test 4: Dummy math check (PASS)
 def test_math_check():
-    a = 2
-    b = 2
-    assert a + b == 4
+    num_a = 2
+    num_b = 2
+    assert num_a + num_b == 4
 
 # Test 5: Dummy string check (PASS)
 def test_string_check():
@@ -34,5 +35,5 @@ def test_string_check():
 def test_intentional_failure():
     val1 = 1
     val2 = 2
-    # noqa tag Ruff ko batata hai ke is warning ko ignore karo
-    assert val1 == val2, "Intentional failure" # noqa: PLR0133
+    # Yeh test jaan bujh kar fail hoga taake CI/CD pipeline ruk jaye
+    assert val1 == val2, "Intentional failure to prove CI/CD blocking"

@@ -1,10 +1,12 @@
-from fastapi import FastAPI, HTTPException
-import psycopg2
-import os
-import logging
 import json
+import logging
+import os
 
-# 1. Structured Logging Setup (JSON format)
+import psycopg2
+from fastapi import FastAPI, HTTPException
+
+
+# Custom JSON Logger setup
 class JsonFormatter(logging.Formatter):
     def format(self, record):
         log_record = {
@@ -22,22 +24,19 @@ logger.setLevel(logging.INFO)
 
 app = FastAPI(title="Apex Operations API")
 
-# 2. Health Endpoint (Liveness)
 @app.get("/health")
 def health_check():
     logger.info("Health check endpoint hit")
     return {"status": "healthy"}
 
-# 3. Readiness Endpoint (Database check)
 @app.get("/ready")
 def readiness_check():
     logger.info("Readiness check endpoint hit")
     try:
-        # Database URL environment variable se aa raha hai (Security)
         db_url = os.getenv("DATABASE_URL", "postgresql://user:password@db:5432/apexdb")
         conn = psycopg2.connect(db_url, connect_timeout=2)
         conn.close()
         return {"status": "ready", "database": "connected"}
-    except Exception as e:
-        logger.error(f"Database connection failed: {str(e)}")
+    except psycopg2.Error as e:
+        logger.error(f"Database connection failed: {e!s}")
         raise HTTPException(status_code=503, detail="Database not ready")
