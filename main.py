@@ -4,7 +4,8 @@ import os
 
 import psycopg2
 from fastapi import FastAPI, HTTPException
-
+from prometheus_client import generate_latest, CONTENT_TYPE_LATEST
+from fastapi import Response
 
 # Custom JSON Logger setup
 class JsonFormatter(logging.Formatter):
@@ -40,3 +41,11 @@ def readiness_check():
     except psycopg2.Error as e:
         logger.error(f"Database connection failed: {e!s}")
         raise HTTPException(status_code=503, detail="Database not ready")
+
+# ==========================================
+# YEH NAYA ENDPOINT ADD HUA HAI (METRICS)
+# ==========================================
+@app.get("/metrics")
+def metrics():
+    logger.info("Metrics endpoint hit")
+    return Response(content=generate_latest(), media_type=CONTENT_TYPE_LATEST)
